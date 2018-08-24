@@ -2,9 +2,18 @@
 
 using namespace std;
 
+int *ptr = get_row_col("end");
+int win_col = ptr[1];
+int win_row = ptr[0];
+int cur_row = ptr[0];
+int cur_col = ptr[1];
+
+string pwd = get_cwd();
+string home = get_cwd();
 void nl() {
     cout<<endl;
-    cur_row+=1;
+    if(cur_row >= 0 && cur_row<=win_row)
+        cur_row+=1;
     cur_col = 0;
     return;
 }
@@ -18,9 +27,12 @@ string get_cwd() {
 }
 
 void move_cursor(int row, int col) {
-    cout<<"\033["<<row<<";"<<col<<"H";
-    cur_row = row;
-    cur_col = col;
+
+    if(row>=0 && row<=win_row && col<=win_col && col>=0) {
+        cout<<"\033["<<row<<";"<<col<<"H";
+        cur_row = row;
+        cur_col = col;
+    }
     return;
 }
 
@@ -33,8 +45,6 @@ int* get_row_col(string str) {
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
         ptr[0] = w.ws_row;
         ptr[1] = w.ws_col;
-    } else if(!str.compare("cursor")) {
-
     }
 
     return ptr;
@@ -44,8 +54,10 @@ char *shrink_str(string str) {
     char *dir_name = (char *)malloc(sizeof(char)*17);
     int length = str.length();
     if(length<=16) {
-        for(int i=0;i<length;i++)
+        int i;
+        for(i=0;i<length;i++)
             dir_name[i] = str[i];
+        dir_name[i] = 0;
         return dir_name;
     }
     else {
@@ -69,7 +81,6 @@ char *shrink_str(string str) {
 }
 
 char check_keypress() {
-
     struct termios old_settings, new_settings;
     tcgetattr(STDIN_FILENO, &old_settings);
     new_settings = old_settings;
@@ -78,16 +89,12 @@ char check_keypress() {
     new_settings.c_cc[VTIME] = 0;
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &new_settings);
 
+
     char ch = 0,ch_test[3] = {0,0,0};
-
     ch_test[0] = getchar();
-
-    if(ch_test[0] == 27)
-    {
+    if(ch_test[0] == 27) {
         ch_test[1] = getchar();
-
-        if (ch_test[1] == 91)
-        {
+        if (ch_test[1] == 91) {
             ch_test[2] = getchar();
             if(ch_test[2] == 'A')
                 ch = -10;
@@ -107,27 +114,50 @@ char check_keypress() {
     return ch;
 }
 
-void ls_cmd(char *dir_path) {
+void modify_wd(string dest_dir) {
+    int pwd_len = pwd.length();
+    if(!dest_dir.compare("..")) {
+        while(true) {
+            if(pwd[--pwd_len] != '/')
+                pwd.pop_back();
+            else {
+                pwd.pop_back();
+                break;
+            }
+        }
+    } else {
+        pwd.append("/");
+        pwd.append(dest_dir);
+    }
+}
+
+vector <struct dirent *>ls_cmd(char *dir_path) {
     DIR *dir_ptr;
     struct dirent *dir_element;
 
     dir_ptr = opendir(dir_path);
 
+    vector <struct dirent *> directories;
+
     if(!dir_ptr) {
-        cout<<"No such file or directory exist!";
-        return;
+        perror(dir_path);
+        return directories;
     }
 
     dir_element = readdir(dir_ptr);
 
     if(dir_element) {
-        cout<<"List of files and directories in: "<<WHITE<<get_cwd()<<"/"<<dir_path;nl();nl();
-        cout<<LCYAN<<"FILE NAME\t\tFILE TYPE\t\tFILE SIZE";nl();
+        cout<<"List of files and directories in: "<<WHITE<<pwd;nl();nl();
+        move_cursor(cur_row, 4);
+        cout<<LCYAN<<"NAME";
+        move_cursor(cur_row, cur_col+18);
+        cout<<"FILE TYPE";
+        move_cursor(cur_row, cur_col+18);
+        cout<<"INODE NUMBER";nl();
     }
     while(dir_element) {
         string type;
         char *dir_name = shrink_str(dir_element->d_name);
-
         if(dir_element->d_type == DT_REG) {
             cout<<WHITE;
             type = "regular file";
@@ -144,16 +174,17 @@ void ls_cmd(char *dir_path) {
             cout<<WHITE;
             type = "unknown";
         }
-        cout<<dir_name<<"\t\t"<<type<<"\t\t"<<dir_element->d_reclen;nl();
+        directories.push_back(dir_element);
+        cout<<">>";
+        move_cursor(cur_row, 4);
+        cout<<dir_name;
+        move_cursor(cur_row, cur_col+18);
+        cout<<type;
+        move_cursor(cur_row, cur_col+18);
+        cout<<dir_element->d_ino;nl();
         dir_element = readdir(dir_ptr);
     }
 
     closedir(dir_ptr);
-
+    return directories;
 }
-
-int *ptr = get_row_col("end");
-    int win_col = ptr[1];
-    int win_row = ptr[0];
-    int cur_row = ptr[0];
-    int cur_col = ptr[1];

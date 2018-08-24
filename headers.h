@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -9,6 +10,7 @@ using namespace std;
 #ifndef INC_HEADERS_H
 #define INC_HEADERS_H
 #define CLEAR "\033[2J"
+#define LINE_CLEAR "\033[2K"
 #define GREEN "\x1b[32m"
 #define BLUE "\x1b[34m"
 #define WHITE "\x1b[37m"
@@ -33,7 +35,7 @@ string get_cwd();
 
 int* get_row_col(string);
 
-void ls_cmd(char *);
+vector <struct dirent *>ls_cmd(char *);
 
 void move_cursor(int, int);
 
@@ -43,6 +45,12 @@ void nl();
 
 char check_keypress();
 
+void clear_terminal();
+
+void modify_wd(string dest_dir);
+
 extern int win_row, win_col, cur_row, cur_col;
+
+extern string pwd, home;
 
 #endif  /*INC_MODULE1_H*/
