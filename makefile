@@ -7,4 +7,3 @@ OBJ = headers.o main.o
 
 FileExplorer: $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
-

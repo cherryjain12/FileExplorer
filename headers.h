@@ -5,6 +5,9 @@
 #include <dirent.h>
 #include <termios.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <math.h>
+#include <ctime>
 using namespace std;
 
 #ifndef INC_HEADERS_H

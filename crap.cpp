@@ -1,136 +1,114 @@
-/*
-#include <iostream>
-#include <unistd.h>
+
+#include<iostream>
+#include<sys/stat.h>
+#include <ctime>
+#include <math.h>
+#include <dirent.h>
+
 using namespace std;
-void print_progress_bar(int percentage){
-  string progress = "[" + string(percentage, '*') + string(100 - percentage, ' ') + "]";
-  cout << progress << "\r\033[F\033[F\033[F" << flush;
-}
 
-int main(void)
-{
-        cout << endl;
-          for (int i=0; i <= 100; ++i){
-            print_progress_bar(i);
-            sleep(1);
-          }
-          cout << endl;
-          cout << endl;
-          cout << endl;
-          cout << endl;
-        /*
-        std::cout << "\033[2J\033[1;1H";
-        for (int i = 0; i < 10; i++) {
-                std::cout << "Status: " << i << "\r" << std::flush;
-                sleep(1);
+void ls_cmd(char *dir_path) {
+    DIR *dir_ptr;
+    struct dirent *dir_element;
+    struct stat fileStat;
+
+    dir_ptr = opendir(dir_path);
+
+    if(!dir_ptr) {
+        perror(dir_path);
+        return;
+    }
+
+    dir_element = readdir(dir_ptr);
+
+    while(dir_element) {
+        string type;
+        unsigned int file_size;
+        char file_per[11], ch;
+
+        if(dir_element->d_type == DT_REG) {
+            type = "regular file";
+        } else if(dir_element->d_type == DT_DIR) {
+            type = "directory";
+        } else if(dir_element->d_type == DT_SOCK) {
+            type = "socket";
+        } else if(dir_element->d_type == DT_LNK) {
+            type = "symlink";
+        } else {
+            type = "unknown";
         }
-        std::cout << "Completed.\n";
-        */
-//}
-/*
 
-#include <chrono>
-#include <cmath>
-#include <iomanip>
-#include <iostream>
-#include <string>
-#include <thread>
+        string strr;
+        strr.append(dir_path);
+        strr.append("/");
+        strr.append(dir_element->d_name);
+        char ptr[1024];
+        int k;
+        for(k=0;strr[k]!=0;k++)
+            ptr[k] = strr[k];
+        ptr[k]=0;
 
-void show_progress_bar(std::ostream& os, int time,
-                       std::string message, char symbol = '*') {
-    static const auto bar_length = 70;
-    // not including the percentage figure and spaces
+        stat(ptr, &fileStat);
+        file_size = fileStat.st_size;
 
-    if (message.length() >= bar_length) {
-        os << message << '\n';
-        message.clear();
-    } else {
-        message += " ";
+        if (fileStat.st_mode & S_IRUSR)
+            file_per[0] = 'r';
+        else
+            file_per[0] = '-';
+        if (fileStat.st_mode & S_IWUSR)
+            file_per[1] = 'w';
+        else
+            file_per[1] = '-';
+        if (fileStat.st_mode & S_IXUSR)
+            file_per[2] = 'x';
+        else
+            file_per[2] = '-';
+        if (fileStat.st_mode & S_IRGRP)
+            file_per[3] = 'r';
+        else
+            file_per[3] = '-';
+        if (fileStat.st_mode & S_IWGRP)
+            file_per[4] = 'w';
+        else
+            file_per[4] = '-';
+        if (fileStat.st_mode & S_IXGRP)
+            file_per[5] = 'x';
+        else
+            file_per[5] = '-';
+        if (fileStat.st_mode & S_IROTH)
+            file_per[6] = 'r';
+        else
+            file_per[6] = '-';
+        if (fileStat.st_mode & S_IWOTH)
+            file_per[7] = 'w';
+        else
+            file_per[7] = '-';
+        if (fileStat.st_mode & S_IXOTH)
+            file_per[8] = 'x';
+        else
+            file_per[8] = '-';
+        file_per[9] = 0;
+
+        cout<<">>"<<"\t"<<dir_element->d_name<<"\t"<<type<<"\t"<<dir_element->d_ino<<"\t"<<file_per<<"\t"<<file_size;
+        time_t modified_time = fileStat.st_mtime;
+        tm *ltm = localtime(&modified_time);
+        int yr = 1900+ltm->tm_year;
+        int month = 1+ltm->tm_mon;
+        int day = ltm->tm_mday;
+        int hr = ltm->tm_hour;
+        int minute = ltm->tm_min;
+        int sec = ltm->tm_sec;
+        string file_time = to_string(day) + "/" + to_string(month) + "/" + to_string(yr) + " " + to_string(hr) + ":" + to_string(minute) + ":" + to_string(sec);
+        cout<<"\t"<<file_time<<endl;
+
+        dir_element = readdir(dir_ptr);
     }
 
-    const auto progress_level = 100.0 / (bar_length - message.length());
-
-    std::cout << message;
-
-    for (double percentage = 0; percentage <= 100; percentage += progress_level) {
-        message += symbol;
-        os << "\r [" << std::setw(3) << static_cast<int>(percentage) << "%] "
-           << message << std::flush;
-        std::this_thread::sleep_for(std::chrono::milliseconds(time));
-    }
-    os << "\n\n";
+    closedir(dir_ptr);
 }
 
 
 int main() {
-    std::cout<<"\033[2J";
-    std::cout<<"\033[6;3HHello\n";
-    std::cout << "\033[1;1H";
-    std::cout<<"Hello there";
-    //show_progress_bar(std::clog, 100, "progress", '#');
+    ls_cmd("/home/aman/Desktop/git/fileexplorer/.git");
     return 0;
 }
-*/
-
-       #include <dirent.h>     /* Defines DT_* constants */
-       #include <fcntl.h>
-       #include <stdio.h>
-       #include <unistd.h>
-       #include <stdlib.h>
-       #include <sys/stat.h>
-       #include <sys/syscall.h>
-
-       #define handle_error(msg) \
-               do { perror(msg); exit(EXIT_FAILURE); } while (0)
-
-       struct linux_dirent {
-           long           d_ino;
-           off_t          d_off;
-           unsigned short d_reclen;
-           char           d_name[];
-       };
-
-       #define BUF_SIZE 1024
-
-       int
-       main(int argc, char *argv[])
-       {
-           int fd, nread;
-           char buf[BUF_SIZE];
-           struct linux_dirent *d;
-           int bpos;
-           char d_type;
-
-           fd = open(argc > 1 ? argv[1] : ".", O_RDONLY | O_DIRECTORY);
-           if (fd == -1)
-               handle_error("open");
-
-           for ( ; ; ) {
-               nread = syscall(SYS_getdents, fd, buf, BUF_SIZE);
-               if (nread == -1)
-                   handle_error("getdents");
-
-               if (nread == 0)
-                   break;
-
-               printf("--------------- nread=%d ---------------\n", nread);
-               printf("inode#    file type  d_reclen  d_off   d_name\n");
-               for (bpos = 0; bpos < nread;) {
-                   d = (struct linux_dirent *) (buf + bpos);
-                   printf("%8ld  ", d->d_ino);
-                   d_type = *(buf + bpos + d->d_reclen - 1);
-                   printf("%-10s ", (d_type == DT_REG) ?  "regular" :
-                                    (d_type == DT_DIR) ?  "directory" :
-                                    (d_type == DT_FIFO) ? "FIFO" :
-                                    (d_type == DT_SOCK) ? "socket" :
-                                    (d_type == DT_LNK) ?  "symlink" :
-                                    (d_type == DT_BLK) ?  "block dev" :
-                                    (d_type == DT_CHR) ?  "char dev" : "???");
-                   printf("%4d %10lld  %s\n", d->d_reclen,
-                           (long long) d->d_off, d->d_name);
-                   bpos += d->d_reclen;
-               }
-           }
-
-           exit(EXIT_SUCCESS);
-       }
