@@ -5,19 +5,13 @@ using namespace std;
 int *ptr = get_row_col("end");
 int win_col = ptr[1];
 int win_row = ptr[0];
-int cur_row = ptr[0];
-int cur_col = ptr[1];
+int cur_row = 0;
+int cur_col = 0;
+int list_row = 0;
+int list_col = 0;
 
 string pwd = get_cwd();
 string home = get_cwd();
-
-void nl() {
-    cout<<endl;
-    if(cur_row >= 0 && cur_row<=win_row)
-        cur_row+=1;
-    cur_col = 0;
-    return;
-}
 
 string get_cwd() {
     char buf[BUFSIZ];
@@ -27,9 +21,14 @@ string get_cwd() {
     return buf;
 }
 
-void move_cursor(int row, int col) {
-
-    if(row>=0 && row<=win_row && col<=win_col && col>=0) {
+void move_cursor(int row, int col, bool scroll_flag, string action) {
+    if(row>=0 && row<=win_row-2 && col<=win_col && col>=0 && !scroll_flag) {
+        cout<<"\033["<<row<<";"<<col<<"H";
+        cur_row = row;
+        cur_col = col;
+        if(!action.compare("D"))
+            list_row = cur_row-6;
+    } else if(scroll_flag) {
         cout<<"\033["<<row<<";"<<col<<"H";
         cur_row = row;
         cur_col = col;
@@ -51,31 +50,32 @@ int* get_row_col(string str) {
     return ptr;
 }
 
-char *shrink_str(string str) {
-    char *dir_name = (char *)malloc(sizeof(char)*17);
+void top_bottom_bar(int row, int col) {
+    cout<<CLEAR;
+    string str = "...Welcome to the file explorer...";
+    int len = str.length();
+    int start_col = col/2 - len/2;
+    cout<<"\033["<<row-1<<";1H";
+    cout<<GREEN<<"cwd: "<<WHITE<<pwd;
+    cout<<"\033[1;"<<start_col<<"H";
+    cout<<GREEN<<str;
+    cout<<"\033[2;1H";
+    for(int i=0;i<col;i++)
+        cout<<".";
+    cout<<"\033[3;0H";
+    cur_row = 3;
+}
+
+string shrink_str(string str) {
+    string dir_name;
     int length = str.length();
     if(length<=16) {
-        int i;
-        for(i=0;i<length;i++)
-            dir_name[i] = str[i];
-        dir_name[i] = 0;
-        return dir_name;
+        return str;
     }
     else {
-        int i,j;
-        for(i=0,j=0;i<17;i++) {
-            if(i<7)
-                dir_name[i] = str[j];
-            else if(i>7 && i<=10)
-                dir_name[i] = '.';
-            else {
-                if(j==11)
-                    j=length-6;
-                dir_name[i] = str[j];
-            }
-            j++;
-        }
-        dir_name[i] = 0;
+        dir_name.append(str, 0, 6);
+        dir_name.append("...");
+        dir_name.append(str, length-7,6);
     }
 
     return dir_name;
@@ -132,43 +132,43 @@ void modify_wd(string dest_dir) {
     }
 }
 
-vector <struct dirent *> ls_cmd(char *dir_path) {
-    DIR *dir_ptr;
-    struct dirent *dir_element;
-    struct stat fileStat;
-
-    dir_ptr = opendir(dir_path);
-
-    vector <struct dirent *> directories;
-
-    if(!dir_ptr) {
-        perror(dir_path);
-        return directories;
+void place_cursor(int row, int col) {
+    if(row>=0 && row<=win_row-2 && col<=win_col && col>=0) {
+        cout<<"\033["<<row<<";"<<col<<"H";
+        cur_row = row;
+        cur_col = col;
     }
+}
 
-    dir_element = readdir(dir_ptr);
+void display(vector <struct dirent *> &dir_list, int start_index, int end_index, bool scroll_status, string flag) {
+    string type;
+    unsigned int file_size;
+    char file_per[11], ch;
+    int elements = dir_list.size();
+    struct dirent * dir_element = dir_list[start_index];
 
     if(dir_element) {
-        cout<<"List of files and directories in: "<<WHITE<<pwd;nl();nl();
-        move_cursor(cur_row, 6);
+        cout<<"List of files and directories in: "<<WHITE<<pwd;
+        move_cursor(5, 0, scroll_status, flag);
+        move_cursor(cur_row, 6, scroll_status, flag);
         cout<<LCYAN<<"NAME";
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<"FILE TYPE";
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<"INODE NUMBER";
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<"FILE PERMISSIONS";
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<"FILE SIZE";
-        move_cursor(cur_row, cur_col+20);
-        cout<<"LAST MODIFIED";nl();
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
+        cout<<"LAST MODIFIED";
+        move_cursor(cur_row+1, 0, scroll_status, flag);
     }
-    while(dir_element) {
-        string type;
-        unsigned int file_size;
-        char file_per[11], ch;
-        char *dir_name = shrink_str(dir_element->d_name);
 
+
+    while(start_index <= end_index) {
+        struct stat fileStat;
+        dir_element = dir_list[start_index];
         if(dir_element->d_type == DT_REG) {
             cout<<WHITE;
             type = "regular file";
@@ -197,6 +197,8 @@ vector <struct dirent *> ls_cmd(char *dir_path) {
             l++;
         }
         absolute_path[k] = 0;
+
+        string dir_name = shrink_str(dir_element->d_name);
 
         stat(absolute_path,&fileStat);
         file_size = fileStat.st_size;
@@ -239,30 +241,50 @@ vector <struct dirent *> ls_cmd(char *dir_path) {
             file_per[8] = '-';
         file_per[9] = 0;
 
-        directories.push_back(dir_element);
         cout<<">>";
-        move_cursor(cur_row, 6);
+        move_cursor(cur_row, 6, scroll_status, flag);
         cout<<dir_name;
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<type;
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<dir_element->d_ino;
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<file_per;
-        move_cursor(cur_row, cur_col+20);
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<file_size;
-        move_cursor(cur_row, cur_col+20);
-        time_t modified_time = fileStat.st_mtime;
-        tm *ltm = localtime(&modified_time);
-        int yr = 1900+ltm->tm_year;
-        int month = 1+ltm->tm_mon;
-        int day = ltm->tm_mday;
-        int hr = ltm->tm_hour;
-        int minute = ltm->tm_min;
-        int sec = ltm->tm_sec;
-        string file_time = to_string(day) + "/" + to_string(month) + "/" + to_string(yr) + " " + to_string(hr) + ":" + to_string(minute) + ":" + to_string(sec);
-        cout<<file_time;nl();
+        move_cursor(cur_row, cur_col+20, scroll_status, flag);
+        cout<<fileStat.st_mtime;
 
+        if(start_index != end_index)
+            move_cursor(cur_row+1, 0, scroll_status, flag);
+        else if(start_index == end_index && !flag.compare("U"))
+            place_cursor(6, 0);
+        else if(!flag.compare("D")) {
+            move_cursor(cur_row, 0, scroll_status, flag);
+            if(elements < win_row - 7)
+                list_row = cur_row-6;
+        }
+        start_index++;
+    }
+}
+
+
+vector <struct dirent *> ls_cmd(char *dir_path) {
+    DIR *dir_ptr;
+    struct dirent *dir_element;
+
+    dir_ptr = opendir(dir_path);
+
+    vector <struct dirent *> directories;
+
+    if(!dir_ptr) {
+        return directories;
+    }
+
+    dir_element = readdir(dir_ptr);
+
+    while(dir_element) {
+        directories.push_back(dir_element);
         dir_element = readdir(dir_ptr);
     }
 

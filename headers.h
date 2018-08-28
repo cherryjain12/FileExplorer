@@ -40,20 +40,20 @@ int* get_row_col(string);
 
 vector <struct dirent *>ls_cmd(char *);
 
-void move_cursor(int, int);
+void display(vector <struct dirent *>&, int, int, bool, string);
 
-extern int cursor_row, cursor_col;
-
-void nl();
+void move_cursor(int, int, bool, string);
 
 char check_keypress();
 
-void clear_terminal();
+void top_bottom_bar(int, int);
 
 void modify_wd(string dest_dir);
 
-extern int win_row, win_col, cur_row, cur_col;
+extern int win_row, win_col, cur_row, cur_col, list_row, list_col;
 
 extern string pwd, home;
+
+void place_cursor(int, int);
 
 #endif  /*INC_MODULE1_H*/
