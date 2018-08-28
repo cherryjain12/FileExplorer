@@ -12,6 +12,7 @@ int list_col = 0;
 
 string pwd = get_cwd();
 string home = get_cwd();
+string twd = get_cwd();
 
 string get_cwd() {
     char buf[BUFSIZ];
@@ -116,19 +117,19 @@ char check_keypress() {
 }
 
 void modify_wd(string dest_dir) {
-    int pwd_len = pwd.length();
+    int twd_len = twd.length();
     if(!dest_dir.compare("..")) {
         while(true) {
-            if(pwd[--pwd_len] != '/')
-                pwd.pop_back();
+            if(twd[--twd_len] != '/')
+                twd.pop_back();
             else {
-                pwd.pop_back();
+                twd.pop_back();
                 break;
             }
         }
     } else {
-        pwd.append("/");
-        pwd.append(dest_dir);
+        twd.append("/");
+        twd.append(dest_dir);
     }
 }
 
@@ -142,7 +143,7 @@ void place_cursor(int row, int col) {
 
 void display(vector <struct dirent *> &dir_list, int start_index, int end_index, bool scroll_status, string flag) {
     string type;
-    unsigned int file_size;
+    float file_size;
     char file_per[11], ch;
     int elements = dir_list.size();
     struct dirent * dir_element = dir_list[start_index];
@@ -202,6 +203,23 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
 
         stat(absolute_path,&fileStat);
         file_size = fileStat.st_size;
+        string readable_size;
+        if(file_size >= 1024*1024*1024) {
+            file_size = file_size/(1024*1024*1024);
+            readable_size.append(to_string(file_size));
+            readable_size.append("GB");
+        } else if(file_size >= 1024*1024) {
+            file_size = file_size/(1024*1024);
+            readable_size.append(to_string(file_size));
+            readable_size.append("MB");
+        } else if(file_size >= 1024) {
+            file_size = file_size/1024;
+            readable_size.append(to_string(file_size));
+            readable_size.append("KB");
+        } else {
+            readable_size.append(to_string(file_size));
+            readable_size.append("B");
+        }
 
         if (fileStat.st_mode & S_IRUSR)
             file_per[0] = 'r';
@@ -251,7 +269,7 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<file_per;
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
-        cout<<file_size;
+        cout<<readable_size;
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<fileStat.st_mtime;
 

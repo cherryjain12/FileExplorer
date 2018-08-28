@@ -11,38 +11,53 @@ void onPressEnter(vector <struct dirent *> &dir_list, bool &scroll_bit, int &lis
         char *move_to_dir = dir_list[list_row]->d_name;
         if(!pwd.compare(home) && (move_to_dir[0]=='.' && move_to_dir[1]=='.' && move_to_dir[2]==0));
         else {
-            if(dir_list[list_row]->d_type == DT_DIR ) {
+            if(dir_list[list_row]->d_type == DT_DIR) {
                 string move_to = "";
                 move_to.append(move_to_dir);
                 if(move_to.compare(".")) {
                     int i;
                     modify_wd(move_to);
-                    for(i=0;pwd[i]!=0;i++)
-                        move_to_dir[i]=pwd[i];
+                    for(i=0;twd[i]!=0;i++)
+                        move_to_dir[i]=twd[i];
                     move_to_dir[i]=0;
 
+                    vector <struct dirent *> dir_list_copy(dir_list.begin(), dir_list.end());
 
                     dir_list.clear();
                     dir_list = ls_cmd(move_to_dir);
-
-                    top_bottom_bar(win_row, win_col);
-
-                    list_size = dir_list.size();
-                    int windows_capacity = win_row - 7;
-                    if(list_size>windows_capacity) {
-                        display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
-                        scroll_bit = true;
+                    if(!dir_list.empty()) {
+                        pwd.assign(twd);
+                        top_bottom_bar(win_row, win_col);
+                        list_size = dir_list.size();
+                        int windows_capacity = win_row - 7;
+                        if(list_size>windows_capacity) {
+                            display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
+                            scroll_bit = true;
+                        } else {
+                            display(dir_list, 0, list_size-1, scroll_bit, "D");
+                            scroll_bit = false;
+                        }
+                        dir_his.push_back(pwd);
+                        itr = dir_his.end();
+                        itr = prev(itr, 1);
                     } else {
-                        display(dir_list, 0, list_size-1, scroll_bit, "D");
-                        scroll_bit = false;
+                        copy(dir_list_copy.begin(), dir_list_copy.end(), back_inserter(dir_list));
+                        twd.assign(pwd);
                     }
-                    dir_his.push_back(pwd);
-                    itr = dir_his.end();
-                    itr = prev(itr, 1);
-
                 }
             } else if(dir_list[list_row]->d_type == DT_REG) {
-                cout<<"inside else, pressed enter"<<move_to_dir;
+                char file[1000];
+                strcpy(file, "xdg-open ");
+                char ptr_pwd[1000];
+                int p;
+                for(p=0;pwd[p]!=0;p++)
+                    ptr_pwd[p]=pwd[p];
+                ptr_pwd[p]=0;
+                strcat(file, ptr_pwd);
+                strcat(file, "/");
+                strcat(file, move_to_dir);
+                strcat(file, " > log.txt");
+                system(file);
             }
         }
     }
@@ -85,28 +100,36 @@ void onPressBack(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list
         cout<<CLEAR;
         int i;
         modify_wd(move_to);
-        int len = pwd.length();
+        int len = twd.length();
         char move_to_dir[len];
-        for(i=0;pwd[i]!=0;i++)
-            move_to_dir[i]=pwd[i];
+        for(i=0;twd[i]!=0;i++)
+            move_to_dir[i]=twd[i];
         move_to_dir[i]=0;
-        top_bottom_bar(win_row, win_col);
+
+        vector <struct dirent *> dir_list_copy(dir_list.begin(), dir_list.end());
         dir_list.clear();
         dir_list = ls_cmd(move_to_dir);
-        dir_his.push_back(pwd);
-        itr = dir_his.end();
-        itr = prev(itr, 1);
 
-        list_size = dir_list.size();
-        int windows_capacity = win_row - 7;
-        if(list_size>windows_capacity) {
-            display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
-            scroll_bit = true;
+        if(!dir_list.empty()) {
+            pwd.assign(twd);
+            top_bottom_bar(win_row, win_col);
+            dir_his.push_back(pwd);
+            itr = dir_his.end();
+            itr = prev(itr, 1);
+
+            list_size = dir_list.size();
+            int windows_capacity = win_row - 7;
+            if(list_size>windows_capacity) {
+                display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
+                scroll_bit = true;
+            } else {
+                display(dir_list, 0, list_size-1, scroll_bit, "D");
+                scroll_bit = false;
+            }
         } else {
-            display(dir_list, 0, list_size-1, scroll_bit, "D");
-            scroll_bit = false;
+            copy(dir_list_copy.begin(), dir_list_copy.end(), back_inserter(dir_list));
+            twd.assign(pwd);
         }
-
     }
 }
 

@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <math.h>
 #include <ctime>
+#include <string.h>
 using namespace std;
 
 #ifndef INC_HEADERS_H
@@ -52,7 +53,7 @@ void modify_wd(string dest_dir);
 
 extern int win_row, win_col, cur_row, cur_col, list_row, list_col;
 
-extern string pwd, home;
+extern string pwd, home, twd;
 
 void place_cursor(int, int);
 
