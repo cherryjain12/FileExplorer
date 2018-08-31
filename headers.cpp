@@ -9,7 +9,8 @@ int cur_row = 0;
 int cur_col = 0;
 int list_row = 0;
 int list_col = 0;
-
+int windows_capacity = win_row - 7;
+string MODE = "NORMAL";
 string pwd = get_cwd();
 string home = get_cwd();
 string twd = get_cwd();
@@ -37,8 +38,21 @@ void move_cursor(int row, int col, bool scroll_flag, string action) {
     return;
 }
 
-int* get_row_col(string str) {
+void switch_mode(vector <struct dirent *> &dir_list, int &list_size, bool &scroll_bit) {
+    if(!MODE.compare("NORMAL"))
+        MODE.assign("CMD");
+    else if(!MODE.compare("CMD"))
+        MODE.assign("NORMAL");
+    top_bottom_bar(win_row, win_col);
+    if(list_size>windows_capacity) {
+        display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
+        scroll_bit = true;
+    } else {
+        display(dir_list, 0, list_size-1, scroll_bit, "D");
+    }
+}
 
+int* get_row_col(string str) {
     int *ptr = (int *)malloc(sizeof(int)*2);
 
     if(!str.compare("end")) {
@@ -57,7 +71,15 @@ void top_bottom_bar(int row, int col) {
     int len = str.length();
     int start_col = col/2 - len/2;
     cout<<"\033["<<row-1<<";1H";
-    cout<<GREEN<<"cwd: "<<WHITE<<pwd;
+    if(!MODE.compare("NORMAL")) {
+        cout<<GREEN<<"SWITCH TO COMMAND MODE "<<WHITE<<"\":\"";
+        cout<<"\033["<<row<<";1H"<<GREEN<<"Navigate: UP "<<WHITE<<"\"UP_ARROW\""<<GREEN<<" DOWN "<<WHITE<<"\"DOWN_ARROW\""<<" | "<<GREEN<<" SELECT DIR OR FILE "<<WHITE<<"\"ENTER\""<<" | "
+        <<GREEN<<" PARENT DIR "<<WHITE<<"\"BACKSPACE\""<<" | "<<GREEN<<" HOME DIR "<<WHITE<<"\"h\""<<" | "<<GREEN<<" PREVIOUSLY VISITED DIR "<<WHITE<<"\"<-\" \"->\"";
+    } else if(!MODE.compare("CMD")) {
+        cout<<GREEN<<"SWITCH TO NORMAL MODE "<<WHITE<<"\"ESC\"";
+        cout<<"\033["<<row<<";1H"<<GREEN<<"Enter Command: "<<WHITE;
+    }
+
     cout<<"\033[1;"<<start_col<<"H";
     cout<<GREEN<<str;
     cout<<"\033[2;1H";
@@ -273,15 +295,20 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<fileStat.st_mtime;
 
+        
         if(start_index != end_index)
             move_cursor(cur_row+1, 0, scroll_status, flag);
-        else if(start_index == end_index && !flag.compare("U"))
+        else if(start_index == end_index && !flag.compare("U") && !MODE.compare("NORMAL"))
             place_cursor(6, 0);
-        else if(!flag.compare("D")) {
+        else if(!flag.compare("D") && !MODE.compare("NORMAL")) {
             move_cursor(cur_row, 0, scroll_status, flag);
             if(elements < win_row - 7)
                 list_row = cur_row-6;
+        } else if(start_index == end_index && !MODE.compare("CMD")) {
+            cout<<"\033["<<win_row<<";16H";
+            cmd_cur = 16;
         }
+
         start_index++;
     }
 }
@@ -296,6 +323,12 @@ vector <struct dirent *> ls_cmd(char *dir_path) {
     vector <struct dirent *> directories;
 
     if(!dir_ptr) {
+        string error = "Unable to access file or dir: " + twd;
+        show_error(error);
+        if(!MODE.compare("NORMAL"))
+            cout<<"\033["<<cur_row<<";0H";
+        else if(!MODE.compare("CMD"))
+            cout<<"\033["<<win_row<<";16H";
         return directories;
     }
 

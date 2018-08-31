@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <iterator>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -9,6 +10,7 @@
 #include <math.h>
 #include <ctime>
 #include <string.h>
+#include <algorithm>
 using namespace std;
 
 #ifndef INC_HEADERS_H
@@ -35,11 +37,23 @@ using namespace std;
 #define UNDERLINEON "x1b[4m"
 #define UNDERLINEOFF "x1b[24m"
 
-string get_cwd();
+extern int win_row, win_col, cur_row, cur_col, list_row, list_col, windows_capacity, cmd_cur;
+
+extern string pwd, home, twd, MODE;
+
+extern string cmd;
+
+extern vector <string> dir_his;
+
+extern vector<string>::iterator his_itr;
+
+extern vector<string> list_cmds;
 
 int* get_row_col(string);
 
 vector <struct dirent *>ls_cmd(char *);
+
+string get_cwd();
 
 void display(vector <struct dirent *>&, int, int, bool, string);
 
@@ -51,10 +65,35 @@ void top_bottom_bar(int, int);
 
 void modify_wd(string dest_dir);
 
-extern int win_row, win_col, cur_row, cur_col, list_row, list_col;
-
-extern string pwd, home, twd;
-
 void place_cursor(int, int);
+
+void onPressLeftN(vector <struct dirent *> &, bool &, int &);
+
+void onPressRightN(vector <struct dirent *> &, bool &, int &);
+
+void onPressBackN(vector <struct dirent *> &, bool &, int &);
+
+void onPressHomeN(vector <struct dirent *> &, bool &, int &);
+
+void onPressEnterN(vector <struct dirent *> &, bool &, int &);
+
+void onPressDownN(vector <struct dirent *> &, bool, int &);
+
+void onPressUpN(vector <struct dirent *> &, bool);
+
+void switch_mode(vector <struct dirent *> &, int &, bool &);
+
+vector <string> processCmd(int, string);
+
+void show_error(string);
+
+void onPressBackC();
+
+void onPressEnterC(vector <struct dirent *> &, bool &, int &);
+
+void storeCmd(char);
+
+void init();
+
 
 #endif  /*INC_MODULE1_H*/
