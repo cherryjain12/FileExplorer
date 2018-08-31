@@ -11,6 +11,12 @@
 #include <ctime>
 #include <string.h>
 #include <algorithm>
+#include <fstream>
+#include <fcntl.h>
+#include <queue>
+#include <stack>
+//#include <errno.h>
+//#include <sys/types.h>
 using namespace std;
 
 #ifndef INC_HEADERS_H
@@ -95,5 +101,14 @@ void storeCmd(char);
 
 void init();
 
+void refresh(vector <struct dirent *> &);
+
+void generate_snapshot(char *, char *);
+
+vector <struct dirent *> ls_snap(char *);
+
+vector <string> search(string, string);
+
+int delete_directory(char *);
 
 #endif  /*INC_MODULE1_H*/

@@ -1,0 +1,46 @@
+>> /home/aman/Desktop/git/fileexplorer/hellll :
+		helll.txt
+		helllf
+		.
+		..
+		helll1.txt
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf :
+		d
+		helllf.txt
+		a
+		c
+		b
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/d :
+		4
+		there.txt
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/a :
+		hi.txt
+		1
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/c :
+		hello.txt
+		3
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/b :
+		2
+		hey.txt
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/d/4 :
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/a/1 :
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/c/3 :
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/hellll/helllf/b/2 :
+		.
+		..
