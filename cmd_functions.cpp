@@ -74,6 +74,23 @@ void generate_snapshot(char *dump_folder, char *dump_file) {
 	}
 }
 
+int isSubstring(string s1, string s2)
+{
+    int M = s1.length();
+    int N = s2.length();
+ 
+    for (int i = 0; i <= N - M; i++) {
+        int j;
+ 
+        for (j = 0; j < M; j++)
+            if (s2[i + j] != s1[j])
+                break;
+        if (j == M)
+            return i;
+    }
+    return -1;
+}
+
 
 vector <string> search(string directory, string val) {
 	string error;
@@ -104,7 +121,8 @@ vector <string> search(string directory, string val) {
 				new_folder.append(dir);
 				if(directories[i]->d_type == DT_DIR && dir.compare(".") && dir.compare(".."))
 					que.push(new_folder);
-				if(!dir.compare(val)){
+				
+				if(isSubstring(val,dir) != -1){
 					search_results.push_back(new_folder);
 				}
 				new_folder.clear();
@@ -131,10 +149,12 @@ int delete_directory(char *delete_dir) {
 		if(!directories.empty() && directories.size()==2) {
 			stk.pop();
 			const int dir_err = rmdir(ch_f);
+			
 			vector <string>::iterator del_itr = find(dir_his.begin(), dir_his.end(), ch_f);
 			if(del_itr!=dir_his.end()) {
 				dir_his.erase(del_itr);
 			}
+			
 			if (dir_err!=0) {
 				flag = 1;
 			}
@@ -165,4 +185,12 @@ int delete_directory(char *delete_dir) {
 		directories.clear();
 	}
 	return flag;
+}
+
+void move_dir(char *source, char *dest) {
+	string error;
+	error.append("Unfortunately moving the directory functionality is not implemented");
+	show_error(error);
+	cout<<"\033["<<win_row<<";16H";
+	return;
 }

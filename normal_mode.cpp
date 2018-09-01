@@ -172,6 +172,7 @@ void onPressRightN(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
         string str = *his_itr;
         int len = str.length(), i;
         pwd.replace(pwd.begin(), pwd.end(), str);
+        twd.replace(twd.begin(), twd.end(), str);
         top_bottom_bar(win_row, win_col);
         char move_to_dir[len];
         for(i=0;i<len;i++) {
@@ -200,6 +201,7 @@ void onPressLeftN(vector <struct dirent *> &dir_list, bool &scroll_bit, int &lis
         char move_to_dir[len];
         cout<<CLEAR;
         pwd.replace(pwd.begin(), pwd.end(), str);
+        twd.replace(twd.begin(), twd.end(), str);
         top_bottom_bar(win_row, win_col);
         for(i=0;i<len;i++) {
             move_to_dir[i] = str[i];

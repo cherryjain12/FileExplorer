@@ -342,3 +342,40 @@ vector <struct dirent *> ls_cmd(char *dir_path) {
     closedir(dir_ptr);
     return directories;
 }
+
+void reset(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list_size) {
+    top_bottom_bar(win_row, win_col);
+    int i;
+    char arr[100];
+    for(i=0;home[i]!=0;i++)
+        arr[i] = home[i];
+    arr[i]=0;
+
+    dir_list.clear();
+
+    pwd.assign(home);
+    twd.assign(home);
+    MODE.assign("NORMAL");
+
+    cmd.clear();
+
+    dir_his.clear();
+
+    list_cmds.clear();
+
+    dir_list = ls_cmd(arr);
+    
+    dir_his.push_back(home);
+    
+    his_itr = dir_his.begin();
+
+    scroll_bit = false;
+    list_size = dir_list.size();
+
+    if(list_size>windows_capacity) {
+        display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
+        scroll_bit = true;
+    } else {
+        display(dir_list, 0, list_size-1, scroll_bit, "D");
+    }
+}

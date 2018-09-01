@@ -69,10 +69,12 @@ char *generate_abs_path(string path) {
 	} else {
 		for(i=0;pwd[i]!=0;i++)
 			move_to_dir[i]=pwd[i];
-		move_to_dir[i++] = '/';
-		while(path[j]!=0) {
-			move_to_dir[i++]=path[j];
-			j++;
+		if(path.compare(".")) {
+			move_to_dir[i++] = '/';
+			while(path[j]!=0) {
+				move_to_dir[i++]=path[j];
+				j++;
+			}
 		}
 	}
 	move_to_dir[i]=0;
@@ -102,6 +104,44 @@ void refresh(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list_siz
     }
 }
 
+
+void load_search_result(vector <struct dirent *> &dir_list, bool &scroll_status, int &list_size, string directory) {
+	top_bottom_bar(win_row, win_col);
+    int i;
+    char arr[100];
+    for(i=0;directory[i]!=0;i++)
+        arr[i] = directory[i];
+    arr[i]=0;
+
+    struct stat path_stat;
+    stat(arr, &path_stat);
+    if(S_ISREG(path_stat.st_mode)) {
+    	char file[1000];
+        strcpy(file, "xdg-open ");
+        strcat(file, arr);
+        strcat(file, " > log.txt");
+        system(file);	
+    } else {
+    	dir_list.clear();
+	    dir_list = ls_cmd(arr);
+	    dir_his.push_back(arr);
+	    his_itr = dir_his.end();
+	    his_itr = prev(his_itr, 1);
+	    pwd.assign(arr);
+	    twd.assign(arr);
+	    bool scroll_bit = false;
+	    int list_size = dir_list.size();
+	    if(list_size>windows_capacity) {
+	        display(dir_list, 0, windows_capacity-1, scroll_status, "D");
+	        scroll_bit = true;
+	    } else {
+	        display(dir_list, 0, list_size-1, scroll_status, "D");
+	    }
+    }
+    refresh(dir_list, scroll_status, list_size);
+}
+
+
 void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list_size) {
 	for(int i=16;i<win_col;i++)
 		cout<<"\033["<<win_row<<";"<<i<<"H"<<" ";
@@ -126,7 +166,72 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 	if(itr != list_cmds.end()) {
 		vector <string> arguments = processCmd(i, input_str);
 		if(!(*itr).compare("copy")) {
-
+			string error;
+			int arg_len = arguments.size();
+			if(arg_len>=2) {
+				string dest_path = arguments[arg_len-1];
+				char *dest_ = generate_abs_path(dest_path);
+				if(!dest_path.compare("..")) {
+					error.append("invalid destination directory mentioned");
+					show_error(error);
+					cout<<"\033["<<win_row<<";16H";
+					return; 
+				} 
+				int eflag = 0;
+				for(int i=0;i<arg_len-1;i++) {
+					string file_path_ = arguments[i];
+					char *file_ = generate_abs_path(file_path_);
+					struct stat path_stat;
+    				stat(file_, &path_stat);
+    				
+    				if(S_ISREG(path_stat.st_mode)) {
+    					int s=0;
+    					while(dest_[s]!=0)
+    						s++;
+    					dest_[s]='/';
+    					
+    					int file_path_length = file_path_.length();
+    					int t=file_path_length-1, u=0;
+    					while(file_path_[t]!='/' && t>=0)
+    						t--;
+    					while(t!=file_path_length)
+    						dest_[++s] = file_path_[++t];
+    					dest_[s]=0;
+    					
+    					ifstream iifile(dest_);
+    					if(!iifile) {
+    						ifstream source(file_, ios::binary);
+    						ofstream dest(dest_, ios::binary);
+    						dest << source.rdbuf();
+    						source.close();
+    						dest.close();
+    						refresh(dir_list, scroll_bit, list_size);
+    					} else {
+    						eflag=1;
+    					}
+						
+    				} else if(S_ISDIR(path_stat.st_mode)) {
+    					error.append("Unfortunately copying the directory functionality is not implemented");
+						show_error(error);
+						cout<<"\033["<<win_row<<";16H";
+    				}
+    				free(dest_);
+    				dest_ = generate_abs_path(dest_path);
+				}
+				if(eflag == 1) {
+					error.append("Unable to copy the file");
+					show_error(error);
+					cout<<"\033["<<win_row<<";16H";
+					return;
+				} else {
+					refresh(dir_list, scroll_bit, list_size);
+				}
+			} else {
+				error.append("invalid copy command");
+				show_error(error);
+				cout<<"\033["<<win_row<<";16H";
+				return;
+			}
 		} else if(!(*itr).compare("create_dir")) {
 			int arg_len = arguments.size();
 			string error;
@@ -159,7 +264,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				} else {
 					refresh(dir_list, scroll_bit, list_size);
 				}
-				
+				free(dest);
 			}else {
 				error.append("Invalid create_dir command");
 				show_error(error);
@@ -199,7 +304,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				} else {
 					refresh(dir_list, scroll_bit, list_size);
 				}
-				
+				free(dest);
 			}else {
 				error.append("Invalid create_file command");
 				show_error(error);
@@ -221,6 +326,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				} else {
 					refresh(dir_list, scroll_bit, list_size);
 				}
+				free(dest);
 			} else {
 				error.append("Invalid delete_file command");
 				show_error(error);
@@ -280,6 +386,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
                         dir_list_copy.clear();
                         twd.assign(pwd);
                     }
+                    free(move_to_dir);
 				}
 			} else {
 				string error = "invalid goto command";
@@ -293,33 +400,114 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				char *dump_folder = generate_abs_path(folder);
 				char *dump_file = generate_abs_path(dfile);
 				generate_snapshot(dump_folder, dump_file);
+				free(dump_file);
+				free(dump_folder);
 			} else {
 				string error = "invalid snapshot command";
 				show_error(error);
 				cout<<"\033["<<win_row<<";16H";
 			}
 		} else if(!(*itr).compare("search")) {
+			string error;
 			if(arguments.size()==1) {
 				string dir = pwd;
 				string val = arguments[0];
 				vector <string> results = search(dir, val);
-				int search_size = results.size();
-				if(search_size == 0) {
-					string error = "No results found";
+				if(results.empty()) {
+					error = "No results found";
 					show_error(error);
 					cout<<"\033["<<win_row<<";16H";
 				} else {
-						
+				    int search_size = results.size();
+				    cout<<CLEAR;
+				    string str = "...Welcome to the file explorer...";
+				    int len = str.length();
+				    int start_col = win_col/2 - len/2;
+				    cout<<"\033["<<win_row-1<<";1H";
+				    cout<<GREEN<<" EXIT FROM SEARCH SCREEN "<<WHITE<<"\"<-\"";
+				    cout<<"\033["<<win_row<<";1H"<<GREEN<<" Type the S.NO. to open the file or enter the directory: ";
 
+				    cout<<"\033[1;"<<start_col<<"H";
+				    cout<<GREEN<<str;
+				    cout<<"\033[2;1H";
+				    for(int i=0;i<win_col;i++)
+				        cout<<".";
+				    cout<<"\033[3;0H";
+				    cout<<"List of files and directories retrieved after searching "<<WHITE<<pwd;
+			        cout<<"\033[5;6H";
+			        cout<<LCYAN<<"S. NO.";
+			        cout<<"\033[5;26H";
+			        cout<<"FILE/ DIRECTORY NAME";
+			        cout<<"\033[5;60H";
+			        cout<<"FILE/ FOLDER ABSOLUTE PATH";
+			        cout<<endl;
 
+			        int row = 6;
+			        for(int i=1;i<=search_size;i++) {
+			        	string absolute_path = results[i-1];
+			        	string file_dir_name;
+			        	int p=absolute_path.length() - 1;
+			        	while(absolute_path[p]!='/' || p==absolute_path.length()-1) {
+			        		file_dir_name.push_back(absolute_path[p--]);
+			        	}
+			        	char fd_name[100];
+			        	int l, m;
+			        	for(l=0,m=file_dir_name.length()-1;m>=0;m--,l++) {
+			        		fd_name[l] = file_dir_name[m];
+			        	}
+			        	if(row <= win_row-2) {
+			        		fd_name[l]=0;
+				        	cout<<YELLOW<<"\033["<<row<<";6H"<<i;
+				        	cout<<WHITE<<"\033["<<row<<";26H"<<fd_name;
+				        	cout<<WHITE<<"\033["<<row<<";60H"<<absolute_path;
+				        	row++;
+			        	}
+			        }
 
-
-
-
-
+			        cout<<GREEN<<"\033["<<win_row<<";58H"<<WHITE;
+    				int option = 0;
+    				int typed_cur = 58;
+    				string typed;
+				    while(true) {
+				    	char key_press = check_keypress();
+				    	if(key_press == -13) {
+		                    refresh(dir_list, scroll_bit, list_size);
+		                } else if(key_press == 10) {
+		                	int typed_length = typed.size();
+		                	for(int i=0;i<typed_length;i++) {
+		                		int digit = typed[i]-48;
+		                		option = (option * 10) + digit;
+		                	}
+		                	if(option>0 && option<=search_size) {
+		                    	load_search_result(dir_list, scroll_bit, list_size, results[option-1]);                		
+			                    return;
+		                	} else {
+		                		error.append("The selected option was wrong");
+		                		typed.clear();
+		                		option = 0;
+								show_error(error);
+		                		for(int i=58;i<=win_col;i++)
+		                			cout<<WHITE<<"\033["<<win_row<<";"<<i<<"H"<<" ";
+		                		typed_cur=58;
+		                		cout<<"\033["<<win_row<<";"<<typed_cur<<"H";
+		                	}
+		                } else if(key_press == 127) {
+		                	int typed_length = typed.size();
+							if(typed_length > 0) {
+								typed.pop_back();
+								typed_cur--;
+								cout<<"\033["<<win_row<<";"<<typed_cur<<"H"<<" "<<"\033["<<win_row<<";"<<typed_cur<<"H";
+							}
+		                } else if(isdigit(key_press)!=0){
+		                	cout<<key_press;
+		                	typed_cur++;
+		                	typed.push_back(key_press);
+		                }
+				    }
+				
 				}
 			} else {
-				string error = "invalid search command";
+				error = "invalid search command";
 				show_error(error);
 				cout<<"\033["<<win_row<<";16H";
 			}
@@ -350,13 +538,71 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					cout<<"\033["<<win_row<<";16H";
 					return;
 				}
+				free(present);
 			} else {
 				string error = "invalid rename command";
 				show_error(error);
 				cout<<"\033["<<win_row<<";16H";
 			}
 		} else if(!(*itr).compare("move")) {
-
+			int arg_len = arguments.size();
+			string error;
+			if(arg_len>=2) {
+				string dest_path = arguments[arg_len-1];
+				char *dest = generate_abs_path(dest_path);
+				if(!dest_path.compare("..")) {
+					error.append("invalid destination directory mentioned");
+					show_error(error);
+					cout<<"\033["<<win_row<<";16H";
+					return; 
+				} 
+				int eflag = 0;
+				for(int i=0;i<arg_len-1;i++) {
+					string file_path_ = arguments[i];
+					char *file_ = generate_abs_path(file_path_);
+					struct stat path_stat;
+    				stat(file_, &path_stat);
+    				
+    				if(S_ISREG(path_stat.st_mode)) {
+    					int s=0;
+    					while(dest[s]!=0)
+    						s++;
+    					dest[s]='/';
+    					
+    					int file_path_length = file_path_.length();
+    					int t=file_path_length-1, u=0;
+    					while(file_path_[t]!='/' && t>=0)
+    						t--;
+    					while(t!=file_path_length)
+    						dest[++s] = file_path_[++t];
+    					dest[s]=0;
+    					
+    					if(!rename(file_, dest)) {
+							refresh(dir_list, scroll_bit, list_size);
+						} else {
+							eflag = 1;
+						}
+						
+    				} else if(S_ISDIR(path_stat.st_mode)) {
+    					move_dir(file_, dest);
+    				}
+    				free(dest);
+    				dest = generate_abs_path(dest_path);
+				}
+				if(eflag == 1) {
+					error.append("Unable to move the file");
+					show_error(error);
+					cout<<"\033["<<win_row<<";16H";
+					return;
+				} else {
+					refresh(dir_list, scroll_bit, list_size);
+				}
+			} else {
+				error.append("invalid move command");
+				show_error(error);
+				cout<<"\033["<<win_row<<";16H";
+				return;
+			}
 		} else if(!(*itr).compare("delete_dir")) {
 			int arg_len = arguments.size();
 			string error;
@@ -365,17 +611,17 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				char *dest = generate_abs_path(file_path);
 		
 				int flag = delete_directory(dest);
-				
 
 				if (flag) {
 					error.append("Unable to delete the directory: ");
 					error.append(file_path);
 					show_error(error);
 					cout<<"\033["<<win_row<<";16H";
+					free(dest);
 					return;
 				} else {
-
 					refresh(dir_list, scroll_bit, list_size);
+					free(dest);
 				}
 			} else {
 				error.append("invalid delete_dir command");
