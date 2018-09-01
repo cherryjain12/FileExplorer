@@ -166,7 +166,7 @@ void place_cursor(int row, int col) {
 void display(vector <struct dirent *> &dir_list, int start_index, int end_index, bool scroll_status, string flag) {
     string type;
     float file_size;
-    char file_per[11], ch;
+    char file_per[11];
     int elements = dir_list.size();
     struct dirent * dir_element = dir_list[start_index];
 

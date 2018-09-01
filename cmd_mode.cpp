@@ -31,7 +31,7 @@ void onPressBackC() {
 vector <string> processCmd(int i, string input_str) {
 	vector <string> arguments;
 	string arg;
-	int p=0, leave=0;
+	int leave=0;
 	for(int j=i+1;input_str[j]!=0;j++) {
 		if(input_str[j]=='"' && input_str[j-1]==' ')
 			leave = 1;
@@ -79,8 +79,27 @@ char *generate_abs_path(string path) {
 	return move_to_dir;
 }
 
-void refresh(vector <struct dirent *> &dir_list) {
+void refresh(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list_size) {
+	top_bottom_bar(win_row, win_col);
+    int i;
+    char arr[100];
+    for(i=0;pwd[i]!=0;i++)
+        arr[i] = pwd[i];
+    arr[i]=0;
 
+    dir_list.clear();
+
+ 	dir_list = ls_cmd(arr);
+    
+    scroll_bit = false;
+    list_size = dir_list.size();
+
+    if(list_size>windows_capacity) {
+        display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
+        scroll_bit = true;
+    } else {
+        display(dir_list, 0, list_size-1, scroll_bit, "D");
+    }
 }
 
 void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list_size) {
@@ -138,11 +157,11 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					cout<<"\033["<<win_row<<";16H";
 					return;
 				} else {
-					refresh(dir_list);
+					refresh(dir_list, scroll_bit, list_size);
 				}
 				
 			}else {
-				error.append("Syntactic error in the command");
+				error.append("Invalid create_dir command");
 				show_error(error);
 				cout<<"\033["<<win_row<<";16H";
 				return;
@@ -178,11 +197,11 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					cout<<"\033["<<win_row<<";16H";
 					return;
 				} else {
-					refresh(dir_list);
+					refresh(dir_list, scroll_bit, list_size);
 				}
 				
 			}else {
-				error.append("Syntactic error in the command");
+				error.append("Invalid create_file command");
 				show_error(error);
 				cout<<"\033["<<win_row<<";16H";
 				return;
@@ -200,10 +219,10 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					cout<<"\033["<<win_row<<";16H";
 					return;
 				} else {
-					refresh(dir_list);
+					refresh(dir_list, scroll_bit, list_size);
 				}
 			} else {
-				error.append("Syntactic error in the command");
+				error.append("Invalid delete_file command");
 				show_error(error);
 				cout<<"\033["<<win_row<<";16H";
 				return;
@@ -214,10 +233,27 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				path.assign(arguments[0]);
 				if(!path.compare("/")) {
 					onPressHomeN(dir_list, scroll_bit, list_size);
-				} else {
-					
+				} else {	
 					char *move_to_dir = generate_abs_path(path);
-
+				
+					int p=0;
+					while(move_to_dir[p]!=0)
+						p++;
+					int count=0;
+					if(!path.compare("..")) {
+				        while(true) {
+				            if(move_to_dir[--p] != '/')
+				                move_to_dir[p]=' ';
+				            else if(count<1){
+				            	count++;
+				                move_to_dir[p]=' ';
+				            } else if(count == 1) {
+				            	move_to_dir[p] = 0;
+				            	break;
+				            } 
+				        }
+				    } 
+					
 					twd.assign(move_to_dir);
 
                     vector <struct dirent *> dir_list_copy(dir_list.begin(), dir_list.end());
@@ -306,7 +342,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				future[i]=0;
 				
 				if(!rename(present, future)) {
-					refresh(dir_list);
+					refresh(dir_list, scroll_bit, list_size);
 				} else {
 					error.append("Unable to rename the file: ");
 					error.append(present);
@@ -329,6 +365,8 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				char *dest = generate_abs_path(file_path);
 		
 				int flag = delete_directory(dest);
+				
+
 				if (flag) {
 					error.append("Unable to delete the directory: ");
 					error.append(file_path);
@@ -336,10 +374,11 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					cout<<"\033["<<win_row<<";16H";
 					return;
 				} else {
-					refresh(dir_list);
+
+					refresh(dir_list, scroll_bit, list_size);
 				}
 			} else {
-				error.append("Syntactic error in the command");
+				error.append("invalid delete_dir command");
 				show_error(error);
 				cout<<"\033["<<win_row<<";16H";
 				return;
@@ -360,6 +399,5 @@ void storeCmd(char ch) {
 	if(cmd_cur<win_col)
 		cout<<WHITE<<ch;
 	cmd_cur++;
-	int i=0;
 	cmd.push_back(ch);
 }

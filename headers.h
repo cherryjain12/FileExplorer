@@ -101,7 +101,7 @@ void storeCmd(char);
 
 void init();
 
-void refresh(vector <struct dirent *> &);
+void refresh(vector <struct dirent *> &, bool &, int &);
 
 void generate_snapshot(char *, char *);
 

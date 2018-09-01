@@ -49,7 +49,7 @@ void generate_snapshot(char *dump_folder, char *dump_file) {
 			vector <struct dirent *> directories = ls_snap(ch_f);
 			int len = directories.size();
 			
-			if(len!=0) {
+			if(!directories.empty()) {
 				for(int i=0;i<len;i++) {
 					string dir = directories[i]->d_name;
 					myfile<<"\t\t"<<dir<<"\n";
@@ -93,9 +93,9 @@ vector <string> search(string directory, string val) {
 			ch_f[i]=folder[i];
 		ch_f[i]=0;
 		vector <struct dirent *> directories = ls_snap(ch_f);
-		int len = directories.size();
-			
-		if(len!=0) {
+		
+		if(!directories.empty()) {
+			int len = directories.size();
 			for(int i=0;i<len;i++) {
 				string dir = directories[i]->d_name;
 				string new_folder;
@@ -127,15 +127,20 @@ int delete_directory(char *delete_dir) {
 			ch_f[i]=folder[i];
 		ch_f[i]=0;
 		vector <struct dirent *> directories = ls_snap(ch_f);
-		int len = directories.size();
-		if(len==2) {
+		int len;
+		if(!directories.empty() && directories.size()==2) {
 			stk.pop();
 			const int dir_err = rmdir(ch_f);
-			if (-1 == dir_err) {
+			vector <string>::iterator del_itr = find(dir_his.begin(), dir_his.end(), ch_f);
+			if(del_itr!=dir_his.end()) {
+				dir_his.erase(del_itr);
+			}
+			if (dir_err!=0) {
 				flag = 1;
 			}
 		}
-		if(len!=0 && len!=2) {
+		if(!directories.empty() && directories.size()!=2) {
+			len = directories.size();
 			for(int i=0;i<len;i++) {
 				string dir = directories[i]->d_name;
 				string new_folder;
@@ -144,7 +149,7 @@ int delete_directory(char *delete_dir) {
 				new_folder.append(dir);
 				if(directories[i]->d_type == DT_DIR && dir.compare(".") && dir.compare("..")) {
 					stk.push(new_folder);
-				} else {
+				} else if(directories[i]->d_type != DT_DIR){
 					char del_folder[200];
 					int s;
 					for(s=0;new_folder[s]!=0;s++)
@@ -155,7 +160,8 @@ int delete_directory(char *delete_dir) {
 					}
 				}
 			}
-		}
+		} else if(directories.empty())
+			flag = 1;
 		directories.clear();
 	}
 	return flag;
