@@ -67,24 +67,32 @@ void onPressUpN(vector <struct dirent *> &dir_list, bool scroll_bit) {
             list_row--;
         else
             list_row = cur_row-1-6;
-        place_cursor(cur_row-1, 0);
+        place_cursor(cur_row-1, 2);
+        cout<<BLUE<<"=>>";
+        cout<<"\033["<<win_row<<";"<<win_col<<"H";
     } else if(scroll_bit && list_row>0) {
         list_row--;
         top_bottom_bar(win_row, win_col);
         int start_index = list_row;
         int end_index = list_row + windows_capacity - 1;
         display(dir_list, start_index, end_index, scroll_bit, "U");
+    } else {
+        place_cursor(cur_row, 2);
+        cout<<BLUE<<"=>>";
+        cout<<"\033["<<win_row<<";"<<win_col<<"H";
     }
 }
 
 void onPressDownN(vector <struct dirent *> &dir_list, bool scroll_bit, int &list_size) {
     if(cur_row < win_row-2) {
         if(!scroll_bit)
-            move_cursor(cur_row+1, 0, false, "D");
+            move_cursor(cur_row+1, 2, false, "D");
         else {
-            place_cursor(cur_row+1, 0);
+            place_cursor(cur_row+1, 2);
             list_row++;
         }
+        cout<<BLUE<<"=>>";
+        cout<<"\033["<<win_row<<";"<<win_col<<"H";
     } else if(scroll_bit && list_row<list_size-1){
         list_row++;
         top_bottom_bar(win_row, win_col);
@@ -107,6 +115,7 @@ void onPressHomeN(vector <struct dirent *> &dir_list, bool &scroll_bit, int &lis
     }
     move_to_dir[i] = 0;
     pwd.assign(home);
+    twd.assign(home);
     top_bottom_bar(win_row, win_col);
     dir_list = ls_cmd(move_to_dir);
 

@@ -35,9 +35,15 @@ int main() {
             key_press = check_keypress();
             if(!MODE.compare("NORMAL")) {
                 if(key_press == -10) {
+                        for(int i=2;i<=6;i++)
+                            cout<<"\033["<<cur_row<<";"<<i<<"H"<<" ";
                     onPressUpN(dir_list, scroll_bit);
                 } else if(key_press == -11) {
-                    onPressDownN(dir_list, scroll_bit, list_size);
+                    if(list_row<list_size-1) {
+                        for(int i=2;i<=6;i++)
+                            cout<<"\033["<<cur_row<<";"<<i<<"H"<<" ";
+                        onPressDownN(dir_list, scroll_bit, list_size);
+                    }
                 } else if(key_press == -12) {
                     onPressRightN(dir_list, scroll_bit, list_size);
                 } else if(key_press == -13) {

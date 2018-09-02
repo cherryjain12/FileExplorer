@@ -92,13 +92,13 @@ void top_bottom_bar(int row, int col) {
 string shrink_str(string str) {
     string dir_name;
     int length = str.length();
-    if(length<=16) {
+    if(length<=31) {
         return str;
     }
     else {
-        dir_name.append(str, 0, 6);
+        dir_name.append(str, 0, 14);
         dir_name.append("...");
-        dir_name.append(str, length-7,6);
+        dir_name.append(str, length-12,14);
     }
 
     return dir_name;
@@ -173,12 +173,10 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
     if(dir_element) {
         cout<<"List of files and directories in: "<<WHITE<<pwd;
         move_cursor(5, 0, scroll_status, flag);
-        move_cursor(cur_row, 6, scroll_status, flag);
+        move_cursor(cur_row, 10, scroll_status, flag);
         cout<<LCYAN<<"NAME";
-        move_cursor(cur_row, cur_col+20, scroll_status, flag);
-        cout<<"FILE TYPE";
-        move_cursor(cur_row, cur_col+20, scroll_status, flag);
-        cout<<"INODE NUMBER";
+        move_cursor(cur_row, cur_col+30, scroll_status, flag);
+        cout<<"OWNER";
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<"FILE PERMISSIONS";
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
@@ -192,22 +190,6 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
     while(start_index <= end_index) {
         struct stat fileStat;
         dir_element = dir_list[start_index];
-        if(dir_element->d_type == DT_REG) {
-            cout<<WHITE;
-            type = "regular file";
-        } else if(dir_element->d_type == DT_DIR) {
-            cout<<YELLOW;
-            type = "directory";
-        } else if(dir_element->d_type == DT_SOCK) {
-            cout<<WHITE;
-            type = "socket";
-        } else if(dir_element->d_type == DT_LNK) {
-            cout<<GREEN;
-            type = "symlink";
-        } else {
-            cout<<WHITE;
-            type = "unknown";
-        }
 
         char absolute_path[2048];
         int k, l=0;
@@ -243,65 +225,88 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
             readable_size.append("B");
         }
 
-        if (fileStat.st_mode & S_IRUSR)
-            file_per[0] = 'r';
-        else
+        if(S_ISREG(fileStat.st_mode)) {
+            cout<<WHITE;
             file_per[0] = '-';
-        if (fileStat.st_mode & S_IWUSR)
-            file_per[1] = 'w';
+        } else if(S_ISDIR(fileStat.st_mode)) {
+            cout<<YELLOW;
+            file_per[0] = 'd';
+        } else if(S_ISCHR(fileStat.st_mode)) {
+            cout<<WHITE;
+            file_per[0] = 'c';
+        } else if(S_ISBLK(fileStat.st_mode)) {
+            cout<<WHITE;
+            file_per[0] = 'b';
+        } else if(S_ISFIFO(fileStat.st_mode)) {
+            cout<<WHITE;
+            file_per[0] = 'f';
+        } else if(S_ISLNK(fileStat.st_mode)) {
+            cout<<GREEN;
+            file_per[0] = 'l';
+        } else
+            file_per[0] = 's';
+
+        if (fileStat.st_mode & S_IRUSR)
+            file_per[1] = 'r';
         else
             file_per[1] = '-';
-        if (fileStat.st_mode & S_IXUSR)
-            file_per[2] = 'x';
+        if (fileStat.st_mode & S_IWUSR)
+            file_per[2] = 'w';
         else
             file_per[2] = '-';
-        if (fileStat.st_mode & S_IRGRP)
-            file_per[3] = 'r';
+        if (fileStat.st_mode & S_IXUSR)
+            file_per[3] = 'x';
         else
             file_per[3] = '-';
-        if (fileStat.st_mode & S_IWGRP)
-            file_per[4] = 'w';
+        if (fileStat.st_mode & S_IRGRP)
+            file_per[4] = 'r';
         else
             file_per[4] = '-';
-        if (fileStat.st_mode & S_IXGRP)
-            file_per[5] = 'x';
+        if (fileStat.st_mode & S_IWGRP)
+            file_per[5] = 'w';
         else
             file_per[5] = '-';
-        if (fileStat.st_mode & S_IROTH)
-            file_per[6] = 'r';
+        if (fileStat.st_mode & S_IXGRP)
+            file_per[6] = 'x';
         else
             file_per[6] = '-';
-        if (fileStat.st_mode & S_IWOTH)
-            file_per[7] = 'w';
+        if (fileStat.st_mode & S_IROTH)
+            file_per[7] = 'r';
         else
             file_per[7] = '-';
-        if (fileStat.st_mode & S_IXOTH)
-            file_per[8] = 'x';
+        if (fileStat.st_mode & S_IWOTH)
+            file_per[8] = 'w';
         else
             file_per[8] = '-';
-        file_per[9] = 0;
+        if (fileStat.st_mode & S_IXOTH)
+            file_per[9] = 'x';
+        else
+            file_per[9] = '-';
+        file_per[10] = 0;
 
-        cout<<">>";
-        move_cursor(cur_row, 6, scroll_status, flag);
+        move_cursor(cur_row, 10, scroll_status, flag);
         cout<<dir_name;
-        move_cursor(cur_row, cur_col+20, scroll_status, flag);
-        cout<<type;
-        move_cursor(cur_row, cur_col+20, scroll_status, flag);
+        move_cursor(cur_row, cur_col+30, scroll_status, flag);
         cout<<dir_element->d_ino;
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<file_per;
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<readable_size;
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
-        cout<<fileStat.st_mtime;
+        cout<<ctime(&fileStat.st_mtime);
 
         
         if(start_index != end_index)
-            move_cursor(cur_row+1, 0, scroll_status, flag);
-        else if(start_index == end_index && !flag.compare("U") && !MODE.compare("NORMAL"))
-            place_cursor(6, 0);
+            move_cursor(cur_row+1, 2, scroll_status, flag);
+        else if(start_index == end_index && !flag.compare("U") && !MODE.compare("NORMAL")) {
+            place_cursor(6, 2);
+            cout<<BLUE<<"=>>";
+            cout<<"\033["<<win_row<<";"<<win_col<<"H";
+        }
         else if(!flag.compare("D") && !MODE.compare("NORMAL")) {
-            move_cursor(cur_row, 0, scroll_status, flag);
+            move_cursor(cur_row, 2, scroll_status, flag);
+            cout<<BLUE<<"=>>";
+            cout<<"\033["<<win_row<<";"<<win_col<<"H";
             if(elements < win_row - 7)
                 list_row = cur_row-6;
         } else if(start_index == end_index && !MODE.compare("CMD")) {
