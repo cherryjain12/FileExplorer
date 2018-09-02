@@ -180,53 +180,70 @@ void onPressRightN(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
         dir_list.clear();
         string str = *his_itr;
         int len = str.length(), i;
-        pwd.replace(pwd.begin(), pwd.end(), str);
-        twd.replace(twd.begin(), twd.end(), str);
-        top_bottom_bar(win_row, win_col);
         char move_to_dir[len];
         for(i=0;i<len;i++) {
             move_to_dir[i] = str[i];
         }
         move_to_dir[i] = 0;
+        twd.assign(str);
+        vector <struct dirent *> dir_list_copy(dir_list.begin(), dir_list.end());
+        dir_list.clear();
         dir_list = ls_cmd(move_to_dir);
-        list_size = dir_list.size();
-        int windows_capacity = win_row - 7;
-        if(list_size>windows_capacity) {
-            display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
-            scroll_bit = true;
+
+
+        if(!dir_list.empty()) {
+            pwd.assign(twd);
+            top_bottom_bar(win_row, win_col);
+            list_size = dir_list.size();
+            int windows_capacity = win_row - 7;
+            if(list_size>windows_capacity) {
+                display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
+                scroll_bit = true;
+            } else {
+                display(dir_list, 0, list_size-1, scroll_bit, "D");
+                scroll_bit = false;
+            }
         } else {
-            display(dir_list, 0, list_size-1, scroll_bit, "D");
-            scroll_bit = false;
+            copy(dir_list_copy.begin(), dir_list_copy.end(), back_inserter(dir_list));
+            dir_list_copy.clear();
+            twd.assign(pwd);
         }
     }
 }
 
-void onPressLeftN(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list_size) {
+void onPressLeftN(vector <struct dirent *> &dir_list, bool &scroll_bit, int &list_size) {   
     if(his_itr != dir_his.begin()) {
         his_itr = prev(his_itr, 1);
         dir_list.clear();
         string str = *his_itr;
         int len = str.length(), i;
         char move_to_dir[len];
-        cout<<CLEAR;
-        pwd.replace(pwd.begin(), pwd.end(), str);
-        twd.replace(twd.begin(), twd.end(), str);
-        top_bottom_bar(win_row, win_col);
         for(i=0;i<len;i++) {
             move_to_dir[i] = str[i];
         }
         move_to_dir[i] = 0;
+        twd.assign(str);
+        vector <struct dirent *> dir_list_copy(dir_list.begin(), dir_list.end());
+        dir_list.clear();
         dir_list = ls_cmd(move_to_dir);
 
-        list_size = dir_list.size();
-        int windows_capacity = win_row - 7;
-        if(list_size>windows_capacity) {
-            display(dir_list, 0, windows_capacity-1, false, "D");
-            scroll_bit = true;
+
+        if(!dir_list.empty()) {
+            pwd.assign(twd);
+            top_bottom_bar(win_row, win_col);
+            list_size = dir_list.size();
+            int windows_capacity = win_row - 7;
+            if(list_size>windows_capacity) {
+                display(dir_list, 0, windows_capacity-1, scroll_bit, "D");
+                scroll_bit = true;
+            } else {
+                display(dir_list, 0, list_size-1, scroll_bit, "D");
+                scroll_bit = false;
+            }
         } else {
-            display(dir_list, 0, list_size-1, scroll_bit, "D");
-            scroll_bit = false;
-        }
+            copy(dir_list_copy.begin(), dir_list_copy.end(), back_inserter(dir_list));
+            dir_list_copy.clear();
+            twd.assign(pwd);
+        }           
     }
 }
-

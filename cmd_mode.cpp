@@ -530,9 +530,13 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				future[i]=0;
 				
 				if(!rename(present, future)) {
+					vector <string>::iterator del_itr = find(dir_his.begin(), dir_his.end(), present);
+					if(del_itr!=dir_his.end()) {
+						dir_his.erase(del_itr);
+					}
 					refresh(dir_list, scroll_bit, list_size);
 				} else {
-					error.append("Unable to rename the file: ");
+					error.append("Unable to rename the file/folder: ");
 					error.append(present);
 					show_error(error);
 					cout<<"\033["<<win_row<<";16H";
