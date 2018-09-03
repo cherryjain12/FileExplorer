@@ -39,7 +39,8 @@ vector <string> processCmd(int i, string input_str) {
 			if(input_str[j]!='"')
 				arg.push_back(input_str[j]);
 			else {
-				arguments.push_back(arg);
+				if(arg.length())
+					arguments.push_back(arg);
 				arg.clear();
 				leave = 0;
 			}
@@ -47,12 +48,14 @@ vector <string> processCmd(int i, string input_str) {
 			if(input_str[j]!=' ') {
 				arg.push_back(input_str[j]);
 			} else {
-				arguments.push_back(arg);
+				if(arg.length())
+					arguments.push_back(arg);
 				arg.clear();
 			}
 		}
 	}
-	arguments.push_back(arg);
+	if(arg.length())
+		arguments.push_back(arg);
 	return arguments;
 }
 
@@ -226,7 +229,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					cout<<"\033["<<win_row<<";16H";
 					return;
 				} else {
-					//refresh(dir_list, scroll_bit, list_size);
+					refresh(dir_list, scroll_bit, list_size);
 				}
 			} else {
 				error.append("invalid copy command");
@@ -336,7 +339,8 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				return;
 			}
 		} else if(!(*itr).compare("goto")) {
-			if(arguments.size()==1) {
+			int arg_len = arguments.size();
+			if(arg_len==1) {
 				string path;
 				path.assign(arguments[0]);
 				if(!path.compare("/")) {
@@ -516,7 +520,8 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				cout<<"\033["<<win_row<<";16H";
 			}
 		} else if(!(*itr).compare("rename")) {
-			if(arguments.size()==2) {
+			int arg_len = arguments.size();
+			if(arg_len==2) {
 				string pre, succ, error;
 				pre.assign(arguments[0]);
 				succ.assign(arguments[1]);

@@ -1,0 +1,626 @@
+>> /home/aman/Desktop/git/fileexplorer/.git :
+		HEAD
+		refs
+		info
+		packed-refs
+		config
+		branches
+		COMMIT_EDITMSG
+		objects
+		description
+		logs
+		.
+		index
+		..
+		hooks
+>> /home/aman/Desktop/git/fileexplorer/.git/refs :
+		tags
+		heads
+		remotes
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/info :
+		.
+		..
+		exclude
+>> /home/aman/Desktop/git/fileexplorer/.git/branches :
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects :
+		1a
+		55
+		0c
+		11
+		c8
+		1e
+		36
+		8c
+		31
+		6a
+		d3
+		18
+		78
+		da
+		84
+		1b
+		90
+		57
+		a0
+		8d
+		pack
+		54
+		bc
+		f1
+		68
+		94
+		52
+		d0
+		c9
+		d8
+		85
+		a5
+		59
+		87
+		10
+		cf
+		c7
+		5d
+		7a
+		b6
+		4a
+		9c
+		d4
+		c3
+		13
+		86
+		9a
+		3e
+		info
+		7e
+		61
+		3d
+		cd
+		f4
+		cb
+		db
+		93
+		49
+		f3
+		35
+		38
+		69
+		64
+		9d
+		33
+		67
+		07
+		0a
+		c1
+		bf
+		c0
+		5e
+		c6
+		48
+		e6
+		Desktop/git/fileexplorer/.git/objects/c0
+		/.git/objects/c0
+		
+		git/fileexplorer/.git/objects/5e
+		jects/5e
+		me/aman/Desktop/git/fileexplorer/.git/objects/c6
+		explorer/.git/objects/c6
+		
+		Desktop/git/fileexplorer/.git/objects/48
+		/.git/objects/48
+		
+		git/fileexplorer/.git/objects/e6
+		jects/e6
+		
+		it/objects/48
+		e1
+		d2
+		/.git/objects/d2
+		
+		37
+		jects/37
+		9f
+		explorer/.git/objects/9f
+		
+		6c
+		/.git/objects/6c
+		
+		a9
+		jects/a9
+		80
+		explorer/.git/objects/80
+		
+		9b
+		/.git/objects/9b
+		
+		88
+		jects/88
+		5b
+		explorer/.git/objects/5b
+		
+		29
+		/.git/objects/29
+		
+		99
+		83
+		e3
+		c2
+		
+		a4
+		d7
+		e5
+		
+		e8
+		3a
+		5c
+>> /home/aman/Desktop/git/fileexplorer/.git/logs :
+		HEAD
+		refs
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/hooks :
+		pre-commit.sample
+		commit-msg.sample
+		prepare-commit-msg.sample
+		post-update.sample
+		update.sample
+		pre-push.sample
+		pre-receive.sample
+		pre-applypatch.sample
+		.
+		pre-rebase.sample
+		..
+		applypatch-msg.sample
+>> /home/aman/Desktop/git/fileexplorer/.git/refs/tags :
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/refs/heads :
+		master
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/refs/remotes :
+		origin
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/1a :
+		4ede62ebfc63366b0c62e7d16ef57f3087fdb0
+		.
+		..
+		88f813b4ce2084cb36e4a725c9d777b691cc90
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/55 :
+		80a9bc0334af114937968fafbef0447a75c7f4
+		cb0233e2c7d2084da370ec397ba640115e93e1
+		.
+		7bc469992ffe88b09311672bda099bfdea03a2
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/0c :
+		.
+		..
+		00a2923a3e41d7d20b7241ef4afa423999ef1b
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/11 :
+		6777f734891154cf8fbb2efe78a4f9c32278d1
+		64c94c71555ef362948342ddced507ce81da82
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c8 :
+		e858947d6d16721e7f099496b3757c81e8eb5c
+		.
+		75809bbaaeb46daa463a383b4e2dc8d746b87d
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/1e :
+		7e16146cf0066d923dcaec354a36dab96e0cb6
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/36 :
+		.
+		6217bfa8371129a35a8ca0263b915f8f0f7059
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/8c :
+		c446ac2decf657144938748397bac3ee330f1e
+		08d1c590b40b19aad2ef6d9b2f886664a695cf
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/31 :
+		b110c9094f41a130e70ca17da9d2053f7bb703
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/6a :
+		9d205185eab66f1ff56c613938bea19c60420c
+		cb27ab335bd603835570d19319a94253bdf09e
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/d3 :
+		d0d7c26c4c72dcd33d71084a34668778032dea
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/18 :
+		3df492108d67dcd76cc5d57e1823ba55d1d782
+		.
+		..
+		badc5e1e9e15c2d9df6ff31f03cb919567a4f4
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/78 :
+		85a17a335e466c04b6742faac12529ed4a09e4
+		.
+		..
+		2fc1cee08224b58189ff11e4bbd6153687a585
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/da :
+		.
+		..
+		fcde6a3505bd26be91b4382d65c4a99e1d0b79
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/84 :
+		82ae4c1ba2996cd425beb18ea28c6d64b03203
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/1b :
+		5a5d7d7b54f968d6ae0806ea67531f32c7ac71
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/90 :
+		d638eb41474c4f0e771b79c6c00ca642bbd8ba
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/57 :
+		986a092df92fba7d975f8c20e5aa24171ba399
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/a0 :
+		83db4d330da4a96d77b54ed454263408a802a0
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/8d :
+		0e457daa8a4342c4611076220e514df8ae560b
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/pack :
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/54 :
+		a0cb5d1dc7ff65a5e774ca5a8a2f05eeee9efb
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/bc :
+		0ce7cd51b7f530f66ada670f1fa88ec7672f7d
+		f181d12c90800e313149c97683f7fb847d898b
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/f1 :
+		49a00a995d1cf3af855e2bc59413973f1c7137
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/68 :
+		.
+		..
+		1991cffb551c113258bbafdf62f21c7407b3ea
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/94 :
+		8c2cd2e7f654a3a799921669b87fc92549e9d3
+		04942ee2ca842a0bccb55e5f2ed865d336f5b0
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/52 :
+		db39c1558d2aa6207d15f03ca173957eb30520
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/d0 :
+		9501e7620ab4926fda54f8ccf1cbb203fd1a98
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c9 :
+		df8afa79046e0140cf02cf78a0851f3ee59a4c
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/d8 :
+		193dc9d63c8ac30c3b944947e4a912ee09f091
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/85 :
+		.
+		..
+		1e10b6d1b610a92cd262c0eb87214f6e308d58
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/a5 :
+		8b1d524ba9020c480353e3883d89a2d8a040aa
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/59 :
+		.
+		828bb8bf3e8757d97c878a52da24f09bda49b8
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/87 :
+		.
+		042fe12ed70ad4d1df8afb8ffdf5fc28b17a71
+		..
+		ac05e49739c26504462dc6d673c62e1e6d669c
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/10 :
+		a0a403ae0e5c7a613aa1c4fc5aaa97091a4b4a
+		a5566dcdd138252b6298bce73641cc93d0f189
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/cf :
+		ec3fdd665690f74ba8f4992f8ae80167bc1d5f
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c7 :
+		cd287f17d0b8cd7aad4d8874c82cf2b2fe2d0b
+		.
+		..
+		b1580422d0c1a6456d6dcafa5dd91708fbed54
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/5d :
+		f475ee63f3bfbaf4520657cec8cf91af2b7acf
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/7a :
+		06150def3a0cc2e5362dc130af0f648d940af3
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/b6 :
+		51cb4bcb99084c4e3ed4896c6caf0acc201bc3
+		f734c00f33b3b733b031249de2aef83b9c370e
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/4a :
+		e9fa14ade0a821f60aeedbb04dcaeb761d13c1
+		8127ca68e020856d4903c71b5155561f787f1e
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/9c :
+		6b92ca401c03c930acc09995e05686be5baf6e
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/d4 :
+		b6757b2023c5d80d2b8eef00f0fb8437e8fbed
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c3 :
+		7647e368fe7874c254c9e62e07edfe92108be6
+		.
+		..
+		d7bf12c0af1ec05664a95150ef28d185416295
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/13 :
+		488cc70505eb125c3fae7dbaf073a7eb18e425
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/86 :
+		.
+		71b97659e4834661be45315e443408247ce347
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/9a :
+		9a3f9eb4b350ae167c2980dc02cffcf43cc5b0
+		f6bde0ff81b9370655a7f80c67ba5472a89ef7
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/3e :
+		cf2ee82078442731552e0e69a57d097e7be7cd
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/info :
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/7e :
+		.
+		8309a18b741937ba30b61c3f74f0b27946bb59
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/61 :
+		2d9acdffc47db66bfe02a1106debdbb66a2465
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/3d :
+		babd331f6a7be6c1eb775569b8672e33288a19
+		22942c2da1ea185c159ca1940ac12563b2f00e
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/cd :
+		.
+		..
+		7c94afe05c29c02724feb8ef9e2eddb102d732
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/f4 :
+		6e41e181e223e6a0696836e767fac88bbfcc49
+		.
+		c59688633a01291b1c5f548e89ca335ac6d685
+		..
+		e9c749373f77977b3f7ad0eba15b77899818e8
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/cb :
+		59febfc599a1a28fe298f7f288e24e0a8236f7
+		bf511f1a60f76c3fca6d2b7b84d0083a95df0f
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/db :
+		600bbeb6288b66382c6ed06503579479cc02ac
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/93 :
+		e84e808f98aa401be74a1e7419aed34d0828eb
+		.
+		..
+		63c1d13d6336fa036297b6464f20f9208ba4e4
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/49 :
+		a1b18bf495b7d30dc4013d20e03e6078293a29
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/f3 :
+		d6e47cef2dacf0eada0d1c43d3ca605aefd21b
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/35 :
+		369570f823fb0f6de7ebed4a3e803a3ccc4ff4
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/38 :
+		a9fbe59b480307d2417cb4d3c30354bc9c9c96
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/69 :
+		0a76ff5037d9f381966caa81ba7ba557ba2e97
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/64 :
+		689df49578781a73b6b600db618edb3ccf199b
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/9d :
+		4072e66abf3c7cdab7c45c67994194f089361d
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/33 :
+		ec74f4181d51d022a38922355499b8bd371c30
+		8ca7a675829ad83eca08d52c03b63ec903b86d
+		1ec487b5796aeb057f26c6dc84ae6beda487a2
+		.
+		537520dec5579b3e3651e9e1ebc40be1cb4c64
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/67 :
+		.
+		..
+		f3976ed128d029856504893bdf510e455a8c2c
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/07 :
+		c9b76d438cb57ebd16cb647a3e581410ea7d60
+		be7afd7821ebb8ded3f38ea6b087f1917ce8d5
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/0a :
+		4aefd8eb70035a00912ad678c7cc52751322cf
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c1 :
+		d91b698328063112e7ef2218adc9249ee1391d
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/bf :
+		792301d5af6f05408ac3314e9c9bcb4801cc36
+		.
+		..
+		4d84d47ec331e3fc08d7528d17d0e7f7a5168a
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c0 :
+		35fff7684a78c35db90b8fc70f10425db60d71
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/5e :
+		fb9bc29c482e023e40e0a2b3b7e49cec842034
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c6 :
+		bd170677f09384cb483ba1880c9e1d25fa32c2
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/48 :
+		4ba41314d8a8b57fc54fe16709f40badad28d7
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/e6 :
+		9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/e1 :
+		8cd8889ecc0dab26714b4b3a19cccdac7656d5
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/d2 :
+		824ca8c4cfdb46c811683c9074b970a9d26fc8
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/37 :
+		e0c822b2ed7db5f1c422b9258808e4fb64aaf3
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/9f :
+		.
+		..
+		ba066c91461d3afd3bedff3de65ecf6e027308
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/6c :
+		53af45ba132a55ded2bb1ba9c09e67787dabd6
+		656a2551d1d6eb070ab183a106cbe05c8bc18e
+		.
+		..
+		d3cdbc3dae70d531ba64550215f1377fe43902
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/a9 :
+		4969834926e3ca2c3d5bbe7af3c317d35d8d04
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/80 :
+		1e1f9a5a5a77c76b49b0f7ac51a412620dcf83
+		d3ced55887c576234f214305fa45fd7cdfcdbb
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/9b :
+		062ee3124c67bdf0398841ba7d0266b94c83e1
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/88 :
+		fe27f757ec0140c6a2850c8aacd5c39e0a706c
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/5b :
+		95d5c13e8d5390bf07b7335da792a62064343b
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/29 :
+		9104842850c660a8be7877e82c58c9190368c4
+		9ecffc869ad68667854ef95e28f588d25aed1c
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/99 :
+		ec9b721fb9e443e6df60cfc70a42ce29e42d29
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/83 :
+		1ba864199d848ce48bdbb3116261103cd0c442
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/e3 :
+		2bcb63c1f16411f6ce1a4e11ecfc2e8a4a9305
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/c2 :
+		.
+		..
+		65a91b95cb0c046e515127442fe6255a748799
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/a4 :
+		f86922fe7e2f84ab3860f3cd6fd8ec3b6a31c4
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/d7 :
+		9ca5dc4d4ac6cc97bd61b723966c2cd2e15488
+		.
+		..
+		3dc4c74b3c70303abc4566fc8507bb7dbac093
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/e5 :
+		51b257a4c91f0b3d272862bd8978168c271134
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/e8 :
+		a74fb61a58c3803628b32f74f3b38f0d3aaba3
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/3a :
+		542ea73d62b3688d2473ae9422e42be4014547
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/objects/5c :
+		.
+		..
+		4a8a9584947398be1ef4f23131f075ab28e6c2
+>> /home/aman/Desktop/git/fileexplorer/.git/logs/refs :
+		heads
+		remotes
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/refs/remotes/origin :
+		HEAD
+		master
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/logs/refs/heads :
+		master
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/logs/refs/remotes :
+		origin
+		.
+		..
+>> /home/aman/Desktop/git/fileexplorer/.git/logs/refs/remotes/origin :
+		HEAD
+		master
+		.
+		..
