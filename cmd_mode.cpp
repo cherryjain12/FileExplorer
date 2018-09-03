@@ -475,6 +475,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				    	char key_press = check_keypress();
 				    	if(key_press == -13) {
 		                    refresh(dir_list, scroll_bit, list_size);
+		                    return;
 		                } else if(key_press == 10) {
 		                	int typed_length = typed.size();
 		                	for(int i=0;i<typed_length;i++) {
