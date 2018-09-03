@@ -54,7 +54,7 @@ void onPressEnterN(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
                 strcat(file, ptr_pwd);
                 strcat(file, "/");
                 strcat(file, move_to_dir);
-                strcat(file, " > log.txt");
+                strcat(file, " >log.txt 2>&1");
                 system(file);
             }
         }
