@@ -19,7 +19,7 @@ Following are the important points regarding the project.
     
     (c): Tough recursive delete is implemented but user can delete only one directory/file at a time whether it be empty or filled.
     
-    (d): Similar is the case with creating a directory or a file.
+    (d): Similar is the case with creating a directory or a file, (i.e. only one file/directory will be created per command).
     
     (e): Unlike creating or deleting a file or a directory on one go, user can move/copy multiple files/directories at a time.
     
@@ -27,7 +27,7 @@ Following are the important points regarding the project.
     
     (g): If the user is providing the absolute path wrt HOME then the path must start with a back slash '/'.
     
-    (f): If the user is providint the relative path wrt current working directory then the path must not start with back slash '/'.
+    (f): If the user is providing the relative path wrt current working directory then the path must not start with back slash '/'.
     
     (g):    Syntax for
     
