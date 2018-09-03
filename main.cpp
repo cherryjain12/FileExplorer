@@ -79,7 +79,6 @@ int main() {
             cout<<"\033["<<cur_row<<";0H";
         }
 
-        
     }
 
     return 0;

@@ -15,6 +15,8 @@
 #include <fcntl.h>
 #include <queue>
 #include <stack>
+#include <pwd.h>
+#include <grp.h>
 using namespace std;
 
 #ifndef INC_HEADERS_H
@@ -109,8 +111,10 @@ vector <string> search(string, string);
 
 int delete_directory(char *);
 
-void move_dir(char *, char *);
-
 void reset(vector <struct dirent *> &, bool &, int &);
+
+int copy_dir(char *, char *);
+
+string replace_name(string, string, string);
 
 #endif  /*INC_MODULE1_H*/

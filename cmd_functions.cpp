@@ -186,11 +186,147 @@ int delete_directory(char *delete_dir) {
 	}
 	return flag;
 }
+/*
+void create_dir() {
+	
+	
+	const int dir_err = mkdir(dest, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	if (-1 == dir_err) {
+		error.append("Unable to locate the directory: ");
+		error.append(path);
+		error.append(" or folder already exist");
+		show_error(error);
+		cout<<"\033["<<win_row<<";16H";
+		return;
+	} else {
+		refresh(dir_list, scroll_bit, list_size);
+	}
+	free(dest);
+	
+}
 
-void move_dir(char *source, char *dest) {
+*/
+string replace_name(string full, string replace, string replace_with) {
+	string x;
+	int replace_len = replace.length();
+	full.replace(0, replace_len, replace_with);
+	x.assign(full);
+	return x;
+}
+
+int copy_dir(char *dump_folder, char *dest) {
 	string error;
-	error.append("Unfortunately moving the directory functionality is not implemented");
-	show_error(error);
-	cout<<"\033["<<win_row<<";16H";
-	return;
+
+	string folder_root, d_folder;
+	int k=0, l;
+	while(dump_folder[k]!=0) {
+		d_folder.push_back(dump_folder[k]);
+		k++;
+	}
+	for(l=k-1;l>=0;l--) {
+		if(dump_folder[l]=='/')
+			break;
+	}
+
+	for(int m=l+1;m<k;m++)
+		folder_root.push_back(dump_folder[m]);
+
+	queue <string> que;
+	
+	que.push(dump_folder);
+	
+	vector <string> fi_n_fo;
+	vector <string> fi_n_fn;
+
+	fi_n_fo.push_back(que.front());
+
+	string base;
+	base.append(dest);
+	base.append("/");
+	base.append(folder_root);
+	fi_n_fn.push_back(base);
+	//cout<<d_folder<<":"<<base<<":"<<endl;
+	while(!que.empty()) {
+		string folder = que.front();
+		que.pop();
+		char ch_f[200];
+		int i;
+		for(i=0;folder[i]!=0;i++)
+			ch_f[i]=folder[i];
+		ch_f[i]=0;
+		vector <struct dirent *> directories = ls_snap(ch_f);
+		int len = directories.size();
+		if(!directories.empty()) {
+			for(int i=0;i<len;i++) {
+				string dir = directories[i]->d_name;
+				string new_folder;
+				new_folder.assign(folder);
+				new_folder.append("/");
+				new_folder.append(dir);
+				string fresh_str = replace_name(new_folder, d_folder, base);
+				//fi_n_fn.push_back(fresh_str);
+				if(directories[i]->d_type == DT_REG) {
+					fi_n_fo.push_back(new_folder);
+					fi_n_fn.push_back(fresh_str);
+				}
+				if(directories[i]->d_type == DT_DIR && dir.compare(".") && dir.compare("..")) {
+					fi_n_fo.push_back(new_folder);
+					fi_n_fn.push_back(fresh_str);	
+					que.push(new_folder);
+				} 
+				new_folder.clear();
+				fresh_str.clear();
+			}
+		} else {
+			return 1;
+		}
+	}
+	int vsize = fi_n_fo.size();
+	for(int i=0;i<vsize;i++) {
+		string temp = fi_n_fo[i];
+		char statstr[1000];
+		int k;
+		for(k=0;temp[k]!=0;k++)
+			statstr[k]=temp[k];
+		statstr[k]=0;
+		struct stat path_stat;
+    	stat(statstr, &path_stat);
+		if(S_ISDIR(path_stat.st_mode)) {
+			string mkfol = fi_n_fn[i];
+			char mkfolder[1000];
+			int j;
+			for(j=0;mkfol[j]!=0;j++)
+				mkfolder[j] = mkfol[j];
+			mkfolder[j]=0;
+			const int dir_err = mkdir(mkfolder, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+			if (-1 == dir_err) {
+				return 1;
+			}
+		}
+	}
+
+	for(int i=0;i<vsize;i++) {
+		string temp = fi_n_fo[i];
+		char statstr[1000];
+		int k;
+		for(k=0;temp[k]!=0;k++)
+			statstr[k]=temp[k];
+		statstr[k]=0;
+		struct stat path_stat;
+    	stat(statstr, &path_stat);
+		if(S_ISREG(path_stat.st_mode)) {
+			ifstream iifile(fi_n_fn[i]);
+			if(!iifile) {
+				ifstream source(fi_n_fo[i], ios::binary);
+				ofstream dest(fi_n_fn[i], ios::binary);
+				dest << source.rdbuf();
+				source.close();
+				dest.close();
+			} else {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
 }

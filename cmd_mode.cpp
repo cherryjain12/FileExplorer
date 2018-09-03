@@ -209,11 +209,13 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
     					} else {
     						eflag=1;
     					}
-						
     				} else if(S_ISDIR(path_stat.st_mode)) {
-    					error.append("Unfortunately copying the directory functionality is not implemented");
-						show_error(error);
-						cout<<"\033["<<win_row<<";16H";
+    					int cflag = copy_dir(file_, dest_);
+    					if(cflag) {
+    						error.append("Unable to copy the files or folders.");
+							show_error(error);
+							cout<<"\033["<<win_row<<";16H";
+    					}
     				}
     				free(dest_);
     				dest_ = generate_abs_path(dest_path);
@@ -224,7 +226,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					cout<<"\033["<<win_row<<";16H";
 					return;
 				} else {
-					refresh(dir_list, scroll_bit, list_size);
+					//refresh(dir_list, scroll_bit, list_size);
 				}
 			} else {
 				error.append("invalid copy command");
@@ -400,6 +402,7 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 				char *dump_folder = generate_abs_path(folder);
 				char *dump_file = generate_abs_path(dfile);
 				generate_snapshot(dump_folder, dump_file);
+				refresh(dir_list, scroll_bit, list_size);
 				free(dump_file);
 				free(dump_folder);
 			} else {
@@ -567,34 +570,30 @@ void onPressEnterC(vector <struct dirent *> &dir_list, bool &scroll_bit, int &li
 					struct stat path_stat;
     				stat(file_, &path_stat);
     				
-    				if(S_ISREG(path_stat.st_mode)) {
-    					int s=0;
-    					while(dest[s]!=0)
-    						s++;
-    					dest[s]='/';
-    					
-    					int file_path_length = file_path_.length();
-    					int t=file_path_length-1, u=0;
-    					while(file_path_[t]!='/' && t>=0)
-    						t--;
-    					while(t!=file_path_length)
-    						dest[++s] = file_path_[++t];
-    					dest[s]=0;
-    					
-    					if(!rename(file_, dest)) {
-							refresh(dir_list, scroll_bit, list_size);
-						} else {
-							eflag = 1;
-						}
-						
-    				} else if(S_ISDIR(path_stat.st_mode)) {
-    					move_dir(file_, dest);
-    				}
+    				int s=0;
+    				while(dest[s]!=0)
+    					s++;
+    				dest[s]='/';
+    				
+    				int file_path_length = file_path_.length();
+    				int t=file_path_length-1, u=0;
+    				while(file_path_[t]!='/' && t>=0)
+    					t--;
+    				while(t!=file_path_length)
+    					dest[++s] = file_path_[++t];
+    				dest[s]=0;
+    				
+    				if(!rename(file_, dest)) {
+						refresh(dir_list, scroll_bit, list_size);
+					} else {
+						eflag = 1;
+					}
+
     				free(dest);
     				dest = generate_abs_path(dest_path);
 				}
 				if(eflag == 1) {
-					error.append("Unable to move the file");
+					error.append("Unable to move the file or directory.");
 					show_error(error);
 					cout<<"\033["<<win_row<<";16H";
 					return;

@@ -175,9 +175,11 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
         move_cursor(5, 0, scroll_status, flag);
         move_cursor(cur_row, 10, scroll_status, flag);
         cout<<LCYAN<<"NAME";
-        move_cursor(cur_row, cur_col+30, scroll_status, flag);
-        cout<<"OWNER";
-        move_cursor(cur_row, cur_col+20, scroll_status, flag);
+        move_cursor(cur_row, cur_col+25, scroll_status, flag);
+        cout<<"USER";
+        move_cursor(cur_row, cur_col+10, scroll_status, flag);
+        cout<<"GROUP";
+        move_cursor(cur_row, cur_col+10, scroll_status, flag);
         cout<<"FILE PERMISSIONS";
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<"FILE SIZE";
@@ -284,11 +286,23 @@ void display(vector <struct dirent *> &dir_list, int start_index, int end_index,
             file_per[9] = '-';
         file_per[10] = 0;
 
+        struct group *grp;
+        struct passwd *pwd;
+
+        grp = getgrgid(fileStat.st_gid);
+        //printf("group: %s\n", grp->gr_name);
+
+        pwd = getpwuid(fileStat.st_uid);
+        //printf("username: %s\n", pwd->pw_name);
+
+
         move_cursor(cur_row, 10, scroll_status, flag);
         cout<<dir_name;
-        move_cursor(cur_row, cur_col+30, scroll_status, flag);
-        cout<<dir_element->d_ino;
-        move_cursor(cur_row, cur_col+20, scroll_status, flag);
+        move_cursor(cur_row, cur_col+25, scroll_status, flag);
+        cout<<pwd->pw_name;
+        move_cursor(cur_row, cur_col+10, scroll_status, flag);
+        cout<<grp->gr_name;
+        move_cursor(cur_row, cur_col+10, scroll_status, flag);
         cout<<file_per;
         move_cursor(cur_row, cur_col+20, scroll_status, flag);
         cout<<readable_size;
