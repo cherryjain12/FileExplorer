@@ -1,3 +1,9 @@
+
+This application is build using C++. Inorder to run the application on you local machine first navigate to the directory and type the following command.
+
+user@user-Inspiron-3542:~/Desktop/git/fileexplorer$ ./FileExplorer
+
+
 Following are the important points regarding the project.
 
 1: The application must only be opened in full screen else the layout of the application will get disturbed.
